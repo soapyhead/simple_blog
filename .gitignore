@@ -1,0 +1,12 @@
+.idea/
+*.pyc
+*.db
+settings_local.py
+env
+/dump.rdb
+.DS_Store
+.coverage
+.ipynb_checkpoints
+*.ipynb
+static/*
+static_root/*
