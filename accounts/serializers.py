@@ -56,10 +56,10 @@ class LoginUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ('username', 'password')
 
     def validate(self, data):
-        user = User.objects.filter(email__iexact=data['email']).first()
+        user = User.objects.filter(username__iexact=data['username']).first()
         if not user:
             raise serializers.ValidationError('Unknown user')
         return data
