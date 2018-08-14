@@ -114,7 +114,7 @@ class LikePostSerializer(serializers.Serializer):
         post = Post.objects.get(pk=validated_data['post_id'])
         like, created = post.likes.get_or_create(user=user)
         if not created:
-            # like already exists, so just reverse activate it
+            # like already exists, so just reverse active it
             like.active = not like.active
             like.save()
         return like
