@@ -1,10 +1,20 @@
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from .models import Post, Like
-from .serializers import PostSerializer, CreatePostSerializer
+from .models import Post
+from .serializers import (
+    PostSerializer, CreatePostSerializer, LikePostSerializer
+)
+
+
+class PostPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
 
 
 class ActionBasedPermission(AllowAny):
@@ -21,6 +31,7 @@ class ActionBasedPermission(AllowAny):
 class PostModelViewSet(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    pagination_class = PostPagination
 
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
@@ -36,9 +47,36 @@ class PostModelViewSet(ModelViewSet):
         return Response(self.serializer_class(instance).data,
                         status=status.HTTP_201_CREATED)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.user == request.user:
+            return super().update(request, *args, **kwargs)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.user == request.user:
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_403_FORBIDDEN)
+
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated],
+            url_path='like', url_name='like_post')
+    def like(self, request, pk=None):
+        serializer = LikePostSerializer(data={'post_id': pk},
+                                        context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,
+                        status=status.HTTP_201_CREATED)
+
+
+class LikePostView(GenericAPIView):
+    serializer_class = LikePostSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data,
+                        status=status.HTTP_201_CREATED)

@@ -9,15 +9,13 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     text = models.TextField(default='', blank=True)
 
+    def get_likes(self):
+        return self.likes.filter(active=True)
+
     class Meta:
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
         ordering = ['-created_at',]
-
-
-class LikeManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(active=True)
 
 
 class Like(models.Model):
@@ -30,8 +28,6 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
-
-    objects = LikeManager()
 
     class Meta:
         unique_together = (('user', 'post'),)
