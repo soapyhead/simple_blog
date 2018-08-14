@@ -10,3 +10,4 @@ env
 *.ipynb
 static/*
 static_root/*
+media/*
