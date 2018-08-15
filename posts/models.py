@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 from webpreview import web_preview
-from blog_backend.tools import timeout
 
 
 class Post(models.Model):
@@ -62,17 +61,17 @@ class Link(models.Model):
     image = models.CharField(max_length=255, blank=True, null=True, default='')
 
     @staticmethod
-    # @timeout(10)
-    def _web_preview_link(link):
+    def web_preview_link(link):
         return web_preview(link)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         # wait for 10 seconds maximum
         try:
-            self.title, self.desc, self.image = self._web_preview_link(self.link)
+            self.title, self.desc, self.image = self.web_preview_link(self.link)
         except TimeoutError:
             print(f"{self.link} preview timeout")
-        super().save(force_insert, force_update, using, update_fields)
-        if not self.title:
-            print('GO CELERY')
+        finally:
+            super().save(force_insert, force_update, using, update_fields)
+            if not self.title:
+                print('GO CELERY')
