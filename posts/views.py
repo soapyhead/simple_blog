@@ -96,5 +96,6 @@ class PostModelViewSet(ModelViewSet):
                                         context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data,
+        instance = self.get_object()
+        return Response(self.serializer_class(instance).data,
                         status=status.HTTP_201_CREATED)
