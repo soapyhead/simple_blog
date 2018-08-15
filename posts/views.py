@@ -39,7 +39,22 @@ class PostModelViewSet(ModelViewSet):
         AllowAny: ['list', 'retrieve']
     }
 
+    def list(self, request, *args, **kwargs):
+        """
+        Return list of post with pagination. (default page_size=10)
+        """
+        return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Get detail post instance by id.
+        """
+        return super().retrieve(request, *args, **kwargs)
+
     def create(self, request, *args, **kwargs):
+        """
+        Create new post.
+        """
         serializer = CreatePostSerializer(data=request.data,
                                           context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
@@ -48,12 +63,24 @@ class PostModelViewSet(ModelViewSet):
                         status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
+        """
+        Update post. Allowed only by post's owner.
+        """
         instance = self.get_object()
         if instance.user == request.user:
-            return super().update(request, *args, **kwargs)
+            serializer = CreatePostSerializer(instance=instance,
+                                              data=request.data)
+            serializer.is_valid(raise_exception=True)
+            updated_instance = serializer.update(instance,
+                                                 serializer.validated_data)
+            return Response(self.serializer_class(updated_instance).data,
+                            status=status.HTTP_202_ACCEPTED)
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
+        """
+        Delete post. Allowed only by post's owner.
+        """
         instance = self.get_object()
         if instance.user == request.user:
             self.perform_destroy(instance)
@@ -63,6 +90,9 @@ class PostModelViewSet(ModelViewSet):
     @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated],
             url_path='like', url_name='like_post')
     def like(self, request, pk=None):
+        """
+        Like a post.
+        """
         serializer = LikePostSerializer(data={'post_id': pk},
                                         context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)

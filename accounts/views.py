@@ -1,14 +1,11 @@
-from django.contrib.auth import authenticate, get_user_model
-from django.utils import timezone
+from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
-    UserSerializer, LoginUserSerializer, CreateUserSerializer
+    UserSerializer, CreateUserSerializer
 )
 
 
@@ -16,6 +13,9 @@ User = get_user_model()
 
 
 class UserView(GenericAPIView):
+    """
+    Get user information
+    """
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
@@ -25,6 +25,9 @@ class UserView(GenericAPIView):
 
 
 class CreateUserView(GenericAPIView):
+    """
+    Registration user
+    """
     serializer_class = CreateUserSerializer
 
     def post(self, request, *args, **kwargs):

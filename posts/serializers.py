@@ -27,10 +27,14 @@ class LinkSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    likes_count = serializers.SerializerMethodField(read_only=True)
     likes = LikeSerializer(many=True, read_only=True,
                            source='get_likes')
     media_files = MediaFileSerializer(many=True, read_only=True)
     links = LinkSerializer(many=True, read_only=True)
+
+    def get_likes_count(self, obj):
+        return obj.get_likes().count()
 
     class Meta:
         model = Post
@@ -89,7 +93,23 @@ class CreatePostSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
+        # update text
         instance.text = validated_data.get('text', instance.text)
+
+        # update media files
+        files = validated_data.get('media_files', None)
+        if files:
+            instance.media_files.all().delete()
+            for file in files:
+                instance.media_files.create(file=file, filename=file.name)
+
+        # update links
+        links = validated_data.get('links', None)
+        if links:
+            instance.links.all().delete()
+            for link in links:
+                instance.links.create(link=link)
+
         instance.save()
         return instance
 
