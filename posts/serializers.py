@@ -1,5 +1,3 @@
-import os
-
 from django.conf import settings
 from rest_framework import serializers
 from blog_backend.tools import upload_file

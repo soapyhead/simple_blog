@@ -50,6 +50,10 @@ class MediaFile(models.Model):
                             upload_to=generate_filename)
     filename = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name = 'Media file'
+        verbose_name_plural = 'Media files'
+
 
 class Link(models.Model):
     post = models.ForeignKey(Post,
@@ -60,18 +64,19 @@ class Link(models.Model):
     desc = models.CharField(max_length=255, blank=True, null=True, default='')
     image = models.CharField(max_length=255, blank=True, null=True, default='')
 
+    class Meta:
+        verbose_name = 'Link'
+        verbose_name_plural = 'Links'
+
     @staticmethod
     def web_preview_link(link):
         return web_preview(link)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        # wait for 10 seconds maximum
         try:
             self.title, self.desc, self.image = self.web_preview_link(self.link)
         except TimeoutError:
             print(f"{self.link} preview timeout")
         finally:
             super().save(force_insert, force_update, using, update_fields)
-            if not self.title:
-                print('GO CELERY')
