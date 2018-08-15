@@ -42,7 +42,7 @@ http://localhost:8000/api/docs
 \
 Время жизни access токена **10 минут**
 
-**POST /api/token/**\
+**POST /api/token/**
 ```
 {
   "username": "newtester",
@@ -56,7 +56,7 @@ http://localhost:8000/api/docs
   "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTM0MzE2NTcwLCJqdGkiOiJiNmEwMWRhODBiNzg0OWZkOTFmMTJkMzJhMTE3MjZkZiIsInVzZXJfaWQiOjV9.HJAaI9G1eQqVFiQgu0EDfdqZzbThzeFtt5-WZXajeqQ"
 }
 ```
-**POST /api/token/refresh/**\
+**POST /api/token/refresh/**
 ```
 {
   "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTUzNDQwMjM3MCwianRpIjoiMzQxMjBmY2NmZGIyNGUwNTg3NzU5YzcwMjUzNjMzZDgiLCJ1c2VyX2lkIjo1fQ.gvaSTZO0_efIR6ltYzCt4KmId8IU_wRXlAZcq6dlC28"
