@@ -39,10 +39,10 @@ http://localhost:8000/api/docs
 ## Авторизация
 
 Авторизация реализована с помощью JWT, т.е. пользователь хранит 2 токена: refresh и access. С access токеном идентифицируется юзер на бэкенде. C refresh токеном обновляет access токен.
-
+\
 Время жизни access токена **10 минут**
 
-**POST /api/token/**
+**POST /api/token/**\
 ```
 {
   "username": "newtester",
@@ -56,7 +56,7 @@ http://localhost:8000/api/docs
   "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTM0MzE2NTcwLCJqdGkiOiJiNmEwMWRhODBiNzg0OWZkOTFmMTJkMzJhMTE3MjZkZiIsInVzZXJfaWQiOjV9.HJAaI9G1eQqVFiQgu0EDfdqZzbThzeFtt5-WZXajeqQ"
 }
 ```
-**POST /api/token/refresh/**
+**POST /api/token/refresh/**\
 ```
 {
   "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTUzNDQwMjM3MCwianRpIjoiMzQxMjBmY2NmZGIyNGUwNTg3NzU5YzcwMjUzNjMzZDgiLCJ1c2VyX2lkIjo1fQ.gvaSTZO0_efIR6ltYzCt4KmId8IU_wRXlAZcq6dlC28"
@@ -69,7 +69,7 @@ http://localhost:8000/api/docs
   "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTUzNDQwMjUwNiwianRpIjoiZGFlMjNmYzA3ZmE0NDNlMmIxNzZlMjIzMGU1NzBlMDEiLCJ1c2VyX2lkIjo1fQ.2Sq4VhnztgfuMeKwmS7TaP4nRBHO2_1kvRgw4uoElSM"
 }
 ```
-**POST /api/token/verify/**
+**POST /api/token/verify/**\
 _verify access token_
 ```
 {
@@ -83,7 +83,7 @@ _verify access token_
 
 ## Профиль
 Получить информацию о текущем пользователе (определяется по access токену).
-**GET /api/profile/**
+**GET /api/profile/**\
 ```
 {
   "id": 4,
@@ -129,8 +129,8 @@ _verify access token_
 * image - str url / null
 * post - id
 
-**GET /api/posts/**
-Получение списка постов с пагинацией
+**GET /api/posts/**\
+Получение списка постов с пагинацией\
 Параметры:
 * page - integer
 * page_size - integer (default: 10)
@@ -191,8 +191,8 @@ Example: http://localhost:8000/api/posts/?page_size=1&page=1
 }
 ```
 
-**POST /api/posts/**
-Создание поста
+**POST /api/posts/**\
+Создание поста\
 Параметры:
 * text - string (required)
 * media_files - array of files
@@ -202,7 +202,7 @@ Example: http://localhost:8000/api/posts/?page_size=1&page=1
 ALLOWED_MEDIA_FORMATS = ['png', 'jpeg', 'jpg', 'bmp',
                          'mov', 'mpeg4', 'mp4', 'avi', 'wmv']
 ```
-**Response Example**
+**Response Example**\
 ```
 {
     "id": 53,
@@ -236,10 +236,10 @@ ALLOWED_MEDIA_FORMATS = ['png', 'jpeg', 'jpg', 'bmp',
 }
 ```
 
-**GET /api/posts/{id}/**
+**GET /api/posts/{id}/**\
 Получить конкретный пост
 
-**PUT /api/posts/{id}/ or PATCH /api/posts/{id}/**
+**PUT /api/posts/{id}/ or PATCH /api/posts/{id}/**\
 Изменить пост (доступно только автору поста)
 **Request Example**:
 ```
@@ -249,8 +249,8 @@ ALLOWED_MEDIA_FORMATS = ['png', 'jpeg', 'jpg', 'bmp',
 }
 ```
 
-**DELETE /api/posts/{id}/**
+**DELETE /api/posts/{id}/**\
 Удаление поста (доступно только автору поста)
 
-**POST /api/posts/{id}/like/**
+**POST /api/posts/{id}/like/**\
 Лайк пост. Юзер может лайкнуть пост только 1 раз, повторный лайк деактивирует лайк. Третий запрос активирует лайк, соответственно, и тд.
