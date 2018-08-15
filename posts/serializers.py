@@ -82,11 +82,11 @@ class CreatePostSerializer(serializers.ModelSerializer):
         instance = Post.objects.create(user=user, text=validated_data['text'])
 
         # TODO: do this async with Celery
-        files = validated_data['media_files']
+        files = validated_data.get('media_files', None)
         if files:
             for file in files:
                 instance.media_files.create(file=file, filename=file.name)
-        links = validated_data['links']
+        links = validated_data.get('links', None)
         if links:
             for link in links:
                 instance.links.create(link=link)
